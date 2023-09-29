@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StList, StWrapper } from './styled-ui';
+import { StList, StWrapper, StScoreBoard, StShipsList } from './styled-ui';
 
 import { Board } from './Board';
 import { Ship } from './Ship';
@@ -46,7 +46,7 @@ const Game = () => {
 
     const handleBoardClick = (evt) => {
         const { row, col } = evt.target.dataset;
-        console.info('----board click', row, col);
+        //console.info('----board click', row, col);
         if (row !== undefined || col !== undefined) {
             const hitTarget = shipsMap[`${row}-${col}`];
             if (hitTarget) {
@@ -67,14 +67,18 @@ const Game = () => {
 
     return <>
         <StWrapper>
-            <StList $wd='20%'>
-                <ScoreCard key={'player-1-score'} score={player1Score} label='player 1' id={1} />
-                <ScoreCard key={'player-2-score'} score='00' label='player 2' id={2} />
-                {ships.map(ship => {
-                    const { ship: shipId, size, hits } = ship;
-                    console.info('ship', ship)
-                    return <Ship key={`ship-${shipId}`} {...{ shipId, size, hits }} />
-                })}
+            <StList $wd='25%'>
+                <StScoreBoard>
+                    <ScoreCard key={'player-1-score'} score={player1Score} id={1} />
+                    <ScoreCard key={'player-2-score'} score={0} id={2} />
+                </StScoreBoard>
+                <StShipsList>
+                    {ships.map(ship => {
+                        const { ship: shipId, size, hits } = ship;
+                        //console.info('ship', ship)
+                        return <Ship key={`ship-${shipId}`} {...{ shipId, size, hits }} />
+                    })}
+                </StShipsList>
             </StList>
             <Board battleField={battleField} turnHandler={handleBoardClick} />
         </StWrapper>

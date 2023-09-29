@@ -1,10 +1,10 @@
 import { StScoreCard, StSpacer } from "./styled-ui";
 
-const ScoreCard = ({ score, label, id }) => {
-    return <StScoreCard $bgClr={id === 1 ? 'orange' : 'green'}>
-        <div>{`0${score}`}</div>
+const ScoreCard = ({ id, score }) => {
+    return <StScoreCard $bgClr={id === 1 ? 'orange' : 'mediumseagreen'}>
+        <h1>{`0${score}`}</h1>
         <StSpacer />
-        <div>{label}</div>
+        <h2>{`player ${id}`}</h2>
     </StScoreCard>
 }
 

@@ -23,6 +23,9 @@ const StHeader = styled.header`
     border-bottom: 1px dotted #4285f5;
     border-left: 1px solid #4285f5;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    @media (max-width: 375px) {
+        margin-bottom: 0px;
+    }
 `;
 
 const StTitle = styled.h1`
