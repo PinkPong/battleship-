@@ -42,8 +42,10 @@ const StCell = styled.div`
     width: 30px;
     height: 30px;
     border: 1px solid #000;
-    background-image: url(${props => props.$status ? './assets/' + props.$status + '.png' : 'transparent'});
-    cursor: pointer;
+    cursor: ${props => props.$isClickable ? 'pointer' : 'default'};
+    &:hover {
+        background-color: ${props => props.$isClickable ? 'orange' : 'transparent'};
+    }
 `;
 
 const StList = styled.div`
@@ -76,6 +78,17 @@ const StShip = styled.div`
     border: 1px dotted #f00;
 `;
 
+const StImg = styled.img`
+    width: inherit;
+    height: inherit;
+`;
+
+const StSpacer = styled.div`
+    width: 100%;
+    height: 1px;
+    background-color: #000;
+    margin: 10px 0;
+`;
 
 export {
     StWrapper,
@@ -84,5 +97,7 @@ export {
     StCell,
     StList,
     StScoreCard,
-    StShip
+    StShip,
+    StImg,
+    StSpacer
 };

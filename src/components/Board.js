@@ -1,14 +1,14 @@
 import { StBoard, StRow } from './styled-ui';
 import { Cell } from './Cell';
 
-const Board = ({ battleFiled, clickHandler }) => {
-    return <StBoard>
+const Board = ({ battleField, turnHandler }) => {
+    return <StBoard onClick={turnHandler}>
         {
-            battleFiled.map((row, rowIndex) => {
+            battleField.map((row, rowIndex) => {
                 return <StRow key={`row-${rowIndex}`}>
                     {
-                        row.map((cell, colIndex) => {
-                        return <Cell key={`cell-${rowIndex}-${colIndex}`} clickHandler={clickHandler} />
+                        row.map((cellData, colIndex) => {
+                        return <Cell key={`cell-${rowIndex}-${colIndex}`} {...{rowIndex, colIndex, cellData}} />
                         })
                     }
                     </StRow>                   

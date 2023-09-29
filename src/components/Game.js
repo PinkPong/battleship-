@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StList, StWrapper } from './styled-ui';
 
 import { Board } from './Board';
@@ -23,24 +23,63 @@ const gameConfig = {
 }
 
 const Game = () => {
-    const [battleFiled, updateBattleField] = useState(Array(10).fill(Array(10).fill(null)));
+    const [battleField, updateBattleField] = useState(Array(10).fill(Array(10).fill(null)));
+    const [ships, updateShips] = useState([
+        ...gameConfig.layout.map(ship => (
+            {
+                ...ship,
+                hits: 0,
+                size: gameConfig.shipTypes[ship.ship].size
+            })
+        )])
+    const [player1Score, updatePlayer1Score] = useState(0);
 
-    const handleBoardClcik = () => {
-        console.info('board clicked');
+    const shipsMap = useMemo(() => {
+        const map = {};
+        ships.forEach(ship => {
+            ship.positions.forEach(([row, col]) => {
+                map[`${row}-${col}`] = ship;
+            })
+        })
+        return map;
+    }, [])
+
+    const handleBoardClick = (evt) => {
+        const { row, col } = evt.target.dataset;
+        console.info('----board click', row, col);
+        if (row !== undefined || col !== undefined) {
+            const hitTarget = shipsMap[`${row}-${col}`];
+            if (hitTarget) {
+                const newShips = [...ships];
+                const ship = newShips.find(ship => ship.ship === hitTarget.ship);
+                ship.hits += 1;
+                if (ship.hits === ship.size) {
+                    updatePlayer1Score(player1Score + 1);
+                }
+                updateShips(newShips);
+            }
+            const newBattleField = [...battleField];
+            newBattleField[row] = [...battleField[row]];
+            newBattleField[row][col] = hitTarget ? 1 : 0;
+            updateBattleField(newBattleField);
+        }
     }
 
-    return <StWrapper>
-        <StList $wd='20%'>
-        <ScoreCard key={'player-1-score'} score='00' label='player 1' id={1}/>
-        <ScoreCard key={'player-2-score'} score='00' label='player 2' id={2}/>
-        {Object.keys(gameConfig.shipTypes).map(shipId => {
-            const ship = gameConfig.shipTypes[[shipId]]; 
-            console.info('ship', shipId, ship);
-            return <Ship key={`ship-${shipId}`} shipId={shipId} size={ship.size} hits={0} />
-        })}
-        </StList>
-        <Board battleFiled={battleFiled} onClick={handleBoardClcik}/>
-    </StWrapper>
+    return <>
+        <StWrapper>
+            <StList $wd='20%'>
+                <ScoreCard key={'player-1-score'} score={player1Score} label='player 1' id={1} />
+                <ScoreCard key={'player-2-score'} score='00' label='player 2' id={2} />
+                {ships.map(ship => {
+                    const { ship: shipId, size, hits } = ship;
+                    console.info('ship', ship)
+                    return <Ship key={`ship-${shipId}`} {...{ shipId, size, hits }} />
+                })}
+            </StList>
+            <Board battleField={battleField} turnHandler={handleBoardClick} />
+        </StWrapper>
+
+    </>
 }
 
 export { Game };
